@@ -1,0 +1,7 @@
+General
+1 - Qual a diferenca do package-lock para o pacakge?
+
+db.config.js
+1 - Coletar o nome do DB
+
+

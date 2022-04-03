@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 const eventSchema = new Schema(
@@ -12,7 +12,7 @@ const eventSchema = new Schema(
         eventFormat:  { type: String, required: true },
         eventDate: { type: String, required: true },
         eventName: { type: String, required: true },
-        eventImage: { type: Image },
+        eventImage: { type: String },
         eventOccurence: { type: Number, required: true },
         eventFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
     },
