@@ -1,7 +1,7 @@
 General
 1 - Qual a diferenca do package-lock para o pacakge?
+2 - package-lock e package deveriam ser ignorados?
 
 db.config.js
 1 - Coletar o nome do DB
-
 

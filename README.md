@@ -26,8 +26,8 @@ You can find the `planned work` on the [Otaku Me - Planning board](https://miro.
 | :-------- | :------- | :------------------------- |
 | `username` | `String` | **Required** - This is the user displayed name |
 | `email` | `String` | **Required** AND **Unique**  |
-| `password-hash` | `String` | **Required**   |
-| `userImage` | `Image` | **Not Required** - This is the user displayed picture (Default = User Icon) |
+| `passwordHash` | `String` | **Required**   |
+| `userImage` | `String` | **Not Required** - This is the user displayed picture (Default = User Icon) |
 | `events` | `Schema.Types.ObjectId` | **Required** - Mongoose generated |
 
 #### Event
@@ -35,11 +35,11 @@ You can find the `planned work` on the [Otaku Me - Planning board](https://miro.
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `eventCreator` | `Schema.Types.ObjectId` | **Required** - System generated |
-| `eventFormat` | `string` | **Required** - This is the format of the event (OVA, Mangá, Animation, etc.) |
-| `eventDate` | `string` | **Required** - This is the date selected by user |
-| `eventName` | `string` | **Required** - This is the anime displayed name |
-| `eventImage` | `string` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
-| `eventOccurence` | `string` | **Required** - System generated |
+| `eventFormat` | `String` | **Required** - This is the format of the event (OVA, Mangá, Animation, etc.) |
+| `eventDate` | `String` | **Required** - This is the date selected by user |
+| `eventName` | `String` | **Required** - This is the anime displayed name |
+| `eventImage` | `String` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
+| `eventOccurence` | `Number` | **Required** - System generated |
 | `eventFollowers` | `Schema.Types.ObjectId` | **Required** - System generated |
 
 ## Author
