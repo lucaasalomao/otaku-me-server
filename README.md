@@ -3,14 +3,16 @@
 This README contains information about the backend made for Otaku Me Page.
 
 You will find here:
-- Schema Reference
-- API Reference
+- Mongoose Schema Reference
+- Axios API Reference
+- Testing Schema
 
 The server makes use of:
 - `Express`
 - `Mongoose`
 - `Dotenv`
 - `Cloudinary`
+- `Axios`
 
 You can find the `client repository` at [Otaku Me - Client](https://github.com/lucaasalomao/otaku-me-client)
 
@@ -25,24 +27,20 @@ You can find the `planned work` on the [Otaku Me - Planning board](https://miro.
 | `username` | `String` | **Required** - This is the user displayed name |
 | `email` | `String` | **Required** AND **Unique**  |
 | `password-hash` | `String` | **Required**   |
-| `userimage` | `Image` | **Not Required** - This is the user displayed picture (Default = User Icon) |
-| `agenda-id` | `String` | **Required** AND **Unique** - Mongoose generated |
-
-#### Agenda
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `format` | `string` | **Required** |
+| `userImage` | `Image` | **Not Required** - This is the user displayed picture (Default = User Icon) |
+| `events` | `Schema.Types.ObjectId` | **Required** - Mongoose generated |
 
 #### Event
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `format` | `string` | **Required** |
-| `date` | `string` | **Required** - This is the date selected by user|
-| `name` | `string` | **Required** - This is the anime displayed name |
-| `animeimage` | `string` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
-| `ocurrences` | `string` | **Required** - System generated |
+| `eventCreator` | `Schema.Types.ObjectId` | **Required** - System generated |
+| `eventFormat` | `string` | **Required** - This is the format of the event (OVA, Mangá, Animation, etc.) |
+| `eventDate` | `string` | **Required** - This is the date selected by user |
+| `eventName` | `string` | **Required** - This is the anime displayed name |
+| `eventImage` | `string` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
+| `eventOccurence` | `string` | **Required** - System generated |
+| `eventFollowers` | `Schema.Types.ObjectId` | **Required** - System generated |
 
 ## Author
 
@@ -58,7 +56,7 @@ Here are the ones that made this possible:
  - [@gsicuto](https://github.com/gsicuto)
  - [@ana](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
 
+## Reference
 
-
-https://mongoosejs.com/docs/guide.html
-https://mongoosejs.com/docs/models.html
+- [Mongoose Schema](https://mongoosejs.com/docs/guide.html)
+- [Mongoose Models](https://mongoosejs.com/docs/models.html)

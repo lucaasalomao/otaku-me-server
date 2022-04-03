@@ -13,8 +13,8 @@ const eventSchema = new Schema(
         eventDate: { type: String, required: true },
         eventName: { type: String, required: true },
         eventImage: { type: Image },
-        eventOccurence: { type: Number },
-        eventFollowers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+        eventOccurence: { type: Number, required: true },
+        eventFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
     },
     { 
         timestamps: true 
