@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Otaku Me - Server
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This README contains information about the backend made for Otaku Me Page.
 
-## Available Scripts
+You will find here:
+- Schema Reference
+- API Reference
 
-In the project directory, you can run:
+The server makes use of:
+- `Express`
+- `Mongoose`
+- `Dotenv`
+- `Cloudinary`
 
-### `npm start`
+You can find the `client repository` at [Otaku Me - Client](https://github.com/lucaasalomao/otaku-me-client)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+You can find the `planned work` on the [Otaku Me - Planning board](https://miro.com/app/board/uXjVOQyexcw=/?invite_link_id=307959421972)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Schema Reference
 
-### `npm test`
+#### User
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Field | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `username` | `String` | **Required** - This is the user displayed name |
+| `email` | `String` | **Required** AND **Unique**  |
+| `password-hash` | `String` | **Required**   |
+| `userimage` | `Image` | **Not Required** - This is the user displayed picture (Default = User Icon) |
+| `agenda-id` | `String` | **Required** AND **Unique** - Mongoose generated |
 
-### `npm run build`
+#### Agenda
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `format` | `string` | **Required** |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Event
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `format` | `string` | **Required** |
+| `date` | `string` | **Required** - This is the date selected by user|
+| `name` | `string` | **Required** - This is the anime displayed name |
+| `animeimage` | `string` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
+| `ocurrences` | `string` | **Required** - System generated |
 
-### `npm run eject`
+## Author
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- [@lucassalomao](https://github.com/lucaasalomao)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Acknowledgements
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The completion of this project wouldn't be possible without great people's help behind it.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Here are the ones that made this possible:
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ - [@D-Kunrath](https://github.com/D-Kunrath)
+ - [@gsicuto](https://github.com/gsicuto)
+ - [@ana](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
