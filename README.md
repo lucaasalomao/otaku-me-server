@@ -57,3 +57,8 @@ Here are the ones that made this possible:
  - [@D-Kunrath](https://github.com/D-Kunrath)
  - [@gsicuto](https://github.com/gsicuto)
  - [@ana](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+
+
+
+https://mongoosejs.com/docs/guide.html
+https://mongoosejs.com/docs/models.html
