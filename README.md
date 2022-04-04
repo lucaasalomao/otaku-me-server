@@ -24,23 +24,23 @@ You can find the `planned work` on the [Otaku Me - Planning board](https://miro.
 
 | Field | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `username` | `String` | **Required** - This is the user displayed name |
-| `email` | `String` | **Required** AND **Unique**  |
-| `passwordHash` | `String` | **Required**   |
-| `userImage` | `String` | **Not Required** - This is the user displayed picture (Default = User Icon) |
-| `events` | `Schema.Types.ObjectId` | **Required** - Mongoose generated |
+| `username` | `String` | **Required** - This is the user displayed name - User input |
+| `email` | `String` | **Required** AND **Unique** - User input |
+| `passwordHash` | `String` | **Required** - User input |
+| `userImage` | `String` | **Not Required** - This is the user displayed picture (Default = User Icon) - User input |
+| `events` | `Array of ObjectId's` | **Required** - Mongoose generated |
 
 #### Event
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `eventCreator` | `Schema.Types.ObjectId` | **Required** - System generated |
-| `eventFormat` | `String` | **Required** - This is the format of the event (OVA, Mangá, Animation, etc.) |
-| `eventDate` | `String` | **Required** - This is the date selected by user |
-| `eventName` | `String` | **Required** - This is the anime displayed name |
-| `eventImage` | `String` | **Not Required** - This is the anime displayed picture (Default = Anime Icon)  |
-| `eventOccurence` | `Number` | **Required** - System generated |
-| `eventFollowers` | `Schema.Types.ObjectId` | **Required** - System generated |
+| `eventCreator` | `ObjectId` | **Required** - Mongoose generated |
+| `eventFormat` | `String` | **Required** - This is the format of the event (OVA, Mangá, Animation, etc.) - User input |
+| `eventDate` | `String` | **Required** - This is the date selected by user - User input |
+| `eventName` | `String` | **Required** - This is the anime displayed name - User input |
+| `eventImage` | `String` | **Not Required** - This is the anime displayed picture (Default = Anime Icon) - User input |
+| `eventOccurence` | `Number` | **Required** - Application generated |
+| `eventFollowers` | `Array of ObjectId's` | **Required** - Application generated |
 
 ## Author
 
