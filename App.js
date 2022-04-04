@@ -7,7 +7,7 @@ connect()
 
 /* USER model import */
 const { User } = require("./models/User")
-/* Event model import   */
+/* Event model import */
 const { Event } = require("./models/Event")
 
 /* routing and controllers - express*/
