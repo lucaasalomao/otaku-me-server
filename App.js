@@ -10,7 +10,7 @@ const { User } = require("./models/User")
 /* Event model import  */
 const { Event } = require("./models/Event")
 
-/* routing and controllers - express*/
+/* routing and controllers - express */
 
 const express = require('express')
 
