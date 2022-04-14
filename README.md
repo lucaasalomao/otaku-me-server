@@ -48,15 +48,13 @@ You can find the `planned work` on the [Otaku Me - Planning board](https://miro.
 
 ## Acknowledgements
 
-The completion of this project wouldn't be possible without great people's help behind it.
-
-Here are the ones that made this possible:
+Awesome people behind the scenes that made this happens!
 
  - [@D-Kunrath](https://github.com/D-Kunrath)
  - [@gsicuto](https://github.com/gsicuto)
  - [@ana](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
 
-## Reference
+## Reference 
 
 - [Mongoose Schema](https://mongoosejs.com/docs/guide.html)
 - [Mongoose Models](https://mongoosejs.com/docs/models.html)
