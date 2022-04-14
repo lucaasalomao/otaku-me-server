@@ -9,12 +9,13 @@ const eventSchema = new Schema(
             required: true,
             unique: true 
         },
-        eventFormat:  { type: String, required: true },
+        eventType:  { type: String, required: true },
         eventDate: { type: String, required: true },
         eventName: { type: String, required: true },
         eventImage: { type: String },
-        eventOccurence: { type: Number, required: true },
-        eventFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
+        eventComments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }],
+        eventFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+        eventRating: { type: Number}
     },
     { 
         timestamps: true 
