@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
+/*22*/
+
 const commentSchema = new Schema(
     {
         commentCreator: {
