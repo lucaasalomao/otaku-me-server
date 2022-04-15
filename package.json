@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "git-commit-msg-linter": "^4.1.1",
-    "husky": "^7.0.0"
+    "husky": "^7.0.0",
+    "standard": "^16.0.4"
   }
 }

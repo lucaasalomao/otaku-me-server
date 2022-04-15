@@ -2,13 +2,15 @@
 require('dotenv').config()
 
 /* db connection */
-const connect = require("./configs/db.config")
+const connect = require('./configs/db.config')
 connect()
 
-/* USER model import */
-const { User } = require("./models/User")
-/* Event model import  */
-const { Event } = require("./models/Event")
+/* Models import */
+/* const { User } = require('./models/User')
+const { Event } = require('./models/Event')
+const { Comment } = require('./models/Comment')
+const { Agenda } = require('./models/Agenda')
+const { Feedback } = require('./models/Feedback') */
 
 /* routing and controllers - express */
 
