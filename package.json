@@ -21,9 +21,14 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
+    "test:wacth":"jest --watchAll",
+    "test:staged":"jest --findRelatedTests",
     "eject": "react-scripts eject",
     "prepare": "husky install"
+  },
+  "standard": {
+    "env": ["jest"]
   },
   "browserslist": {
     "production": [
@@ -40,6 +45,7 @@
   "devDependencies": {
     "git-commit-msg-linter": "^4.1.1",
     "husky": "^7.0.0",
+    "jest": "^27.5.1",
     "lint-staged": "^12.3.7",
     "standard": "^16.0.4"
   }
