@@ -1,0 +1,7 @@
+{
+    "*.js": [
+        "echo running lint-staged",
+        "npx standard --fix",
+        "git add"
+    ]
+}
