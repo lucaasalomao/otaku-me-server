@@ -8,9 +8,11 @@
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.9",
     "prettier": "^2.6.2",
     "react": "^18.0.0",
@@ -22,13 +24,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "test:wacth":"jest --watchAll",
-    "test:staged":"jest --findRelatedTests",
+    "test:wacth": "jest --watchAll",
+    "test:staged": "jest --findRelatedTests",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
   "standard": {
-    "env": ["jest"]
+    "env": [
+      "jest"
+    ]
   },
   "browserslist": {
     "production": [
