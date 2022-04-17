@@ -4,13 +4,6 @@ require('dotenv').config()
 /* database connection */
 require('./configs/db.config')
 
-/* importing models */
-/*
-const { Event } = require('./models/Event')
-const { Comment } = require('./models/Comment')
-const { Agenda } = require('./models/Agenda')
-const { Feedback } = require('./models/Feedback') */
-
 /* initialization of express application */
 
 const express = require('express')
@@ -23,15 +16,12 @@ app.use(cors())
 
 /* authentication */
 
-const authMiddleware = require('./middlewares/auth.middleware')
+/* const authMiddleware = require('./middlewares/auth.middleware') */
 const authRoute = require('./routes/auth.routes')
 
-app.use('/auth', authRoute)
-app.use(authMiddleware)
+app.use(authRoute)
+/* app.use(authMiddleware) */
 
 /* private routes */
 
-/* running server */
-app.listen(process.env.PORT, () => {
-  console.log('Server running on port:', process.env.PORT)
-})
+module.exports = app

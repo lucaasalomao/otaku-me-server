@@ -1,8 +1,9 @@
 /* importing models */
-const { User } = require('./models/User')
+const User = require('../models/user.model')
 
 /* importing packages */
 const bcrypt = require('bcryptjs')
+/* const jwt = require("jsonwebtoken") */
 
 /* initialization of express router */
 const { Router } = require('express')
@@ -17,7 +18,6 @@ router.post('/signup', async (req, res) => {
     }
 
     const user = await User.findOne({ email })
-
     if (user) {
       throw new Error('Email already exists')
     }
