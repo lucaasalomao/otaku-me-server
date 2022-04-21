@@ -7,7 +7,7 @@ const Event = require('../models/event.model')
 const { Router } = require('express')
 const router = Router()
 
-/* Add a comment in Agenda */
+/* Add NEW comment in Agenda */
 router.post('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
   const { id } = req.user
@@ -46,7 +46,7 @@ router.delete('/:commentId', async (req, res) => {
   }
 })
 
-/* Add a comment in Event */
+/* Add NEW comment in Event */
 router.post('/:eventId', async (req, res) => {
   const { eventId } = req.params
   const { id } = req.user
@@ -79,13 +79,13 @@ router.delete('/:commentId', async (req, res) => {
 
     await Event.findByIdAndUpdate(comment.eventReference, { $pull: { eventComments: commentId } })
 
-    res.status(200).json({ message: 'Comment deleted' })
+    res.status(200).json({ message: 'Comment successfully deleted' })
   } catch (error) {
     res.status(500).json({ message: 'Error trying to delete Comment', error })
   }
 })
 
-/* Like a comment */
+/* Like/Dislike a comment */
 router.put('/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
