@@ -90,7 +90,15 @@ router.put('/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
   try {
-    await Comment.findOneAndUpdate(commentId, { $push: { commentLikes: id } })
+    const comment = await Comment.findById(commentId)
+
+    if (comment.commentLikes.includes(comment.commentCreator)) {
+      await Comment.findOneAndUpdate(commentId, { $pull: { commentLikes: id } })
+    } else {
+      await Comment.findOneAndUpdate(commentId, { $push: { commentLikes: id } })
+    }
+
+    res.status(200).json({ message: 'Comment updated' })
   } catch (error) {
     res.status(500).json({ message: 'Error trying to update this comment', error })
   }
