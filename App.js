@@ -14,14 +14,24 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-/* authentication */
+/* importing middleware */
+const authMiddleware = require('./middlewares/auth.middleware')
 
-/* const authMiddleware = require('./middlewares/auth.middleware') */
+/* importing routes */
 const authRoute = require('./routes/auth.routes')
+const agendaRoute = require('./routes/agenda.routes')
+const animeRoute = require('./routes/anime.routes')
+const commentRoute = require('./routes/comment.routes')
 
+/* public routes */
 app.use(authRoute)
-/* app.use(authMiddleware) */
+
+/* authentication middleware */
+app.use(authMiddleware)
 
 /* private routes */
+app.use(commentRoute)
+app.use(agendaRoute)
+app.use(animeRoute)
 
 module.exports = app

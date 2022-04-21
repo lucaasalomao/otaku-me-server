@@ -15,7 +15,8 @@ const agendaSchema = new Schema(
     agendaEvents: [{ type: Schema.Types.ObjectId, ref: 'Event', required: true }],
     agendaImage: { type: String },
     agendaOccurence: { type: Number, required: true },
-    agendaFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
+    agendaFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+    agendaComments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }]
   },
   {
     timestamps: true

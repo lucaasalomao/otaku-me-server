@@ -1,19 +1,14 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-/* 22 */
-
 const commentSchema = new Schema(
   {
-    commentCreator: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-      unique: true
-    },
     commentText: { type: String, required: true, maxLength: 140 },
     commentImage: { type: String },
-    commentLikes: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
+    commentCreator: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    commentLikes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    agendaReference: [{ type: Schema.Types.ObjectId, ref: 'Agenda' }],
+    eventReference: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
   },
   {
     timestamps: true
