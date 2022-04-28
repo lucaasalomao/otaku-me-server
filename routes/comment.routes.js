@@ -7,8 +7,8 @@ const Event = require('../models/event.model')
 const { Router } = require('express')
 const router = Router()
 
-/* Add NEW comment in Agenda */
-router.post('/:agendaId', async (req, res) => {
+/* CREATE comment in Agenda */
+router.post('/agenda/:agendaId', async (req, res) => {
   const { agendaId } = req.params
   const { id } = req.user
   try {
@@ -26,7 +26,7 @@ router.post('/:agendaId', async (req, res) => {
 })
 
 /* Delete a comment from Agenda */
-router.delete('/:commentId', async (req, res) => {
+router.delete('/agenda/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
   try {
@@ -46,8 +46,8 @@ router.delete('/:commentId', async (req, res) => {
   }
 })
 
-/* Add NEW comment in Event */
-router.post('/:eventId', async (req, res) => {
+/* CREATE comment in Event */
+router.post('/event/:eventId', async (req, res) => {
   const { eventId } = req.params
   const { id } = req.user
   try {
@@ -65,7 +65,7 @@ router.post('/:eventId', async (req, res) => {
 })
 
 /* Delete a comment from Event */
-router.delete('/:commentId', async (req, res) => {
+router.delete('/event/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
   try {

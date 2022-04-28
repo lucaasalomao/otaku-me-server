@@ -3,20 +3,13 @@ const { Schema } = mongoose
 
 const agendaSchema = new Schema(
   {
-    agendaCreator: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-      unique: true
-    },
+    agendaCreator: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
     agendaName: { type: String, required: true },
-    agendaPermission: { type: String, required: true },
-    agendaEventTypes: [{ type: String, required: true }],
-    agendaEvents: [{ type: Schema.Types.ObjectId, ref: 'Event', required: true }],
+    agendaDescription: { type: String },
     agendaImage: { type: String },
-    agendaOccurence: { type: Number, required: true },
-    agendaFollowers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-    agendaComments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }]
+    agendaComments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    agendaEvents: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
+    agendaEventTypes: [{ type: String }]
   },
   {
     timestamps: true

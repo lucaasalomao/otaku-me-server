@@ -1,44 +1,68 @@
 /* importing models */
-/* const User = require('../models/user.model') */
+/* const Comment = require('../models/agenda.model')
+const Agenda = require('../models/agenda.model')
+const Event = require('../models/event.model') */
+const User = require('../models/user.model')
 
 /* initialization of express router */
 const { Router } = require('express')
 const router = Router()
 
-router.get('/:id', async (req, res) => {
-
-  /* populate
-
-  User image
-  User name
-  User Description
-  User Followers
-    /populate
-      User image
-      User name
-  User Agendas
-    /populate
-      agenda animes
-        /populate
-          types
-  User Types
-  User Animes
-  User Liked
-
-  */
-
+// Get User
+router.get('/:userId', async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId)
+      .populate('agendaEvents')
+      .populate({
+        path: 'agendaComments',
+        populate: {
+          path: 'commentCreator',
+          select: 'username userImage -passwordHash'
+        }
+      })
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get User', error })
+  }
 })
 
-router.get('/all', async (req, res) => {
+// Get All Users
+router.get('/search/all', async (req, res) => {
+  try {
+    const users = await User.find()
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get all Users', error })
+  }
+})
 
-  /* populate
+// Get All Users containing string
+router.get('/search/:text', async (req, res) => {
+  const { text } = req.params
+  try {
+    const users = await User.find({ username: { $regex: text } })
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get specific Users', error })
+  }
+})
 
-  User image
-  User name
-  User Description
+/* Edit User */
+router.put('/:userId', async (req, res) => {
+  const { userId } = req.params
+  const { _id } = req.user
+  try {
+    if (userId !== _id) {
+      return res.status(400).json("User can't edit other User")
+    }
 
-  */
+    await User.findByIdAndUpdate(userId, req.body)
 
+    res.status(200).json({ message: 'User successfully updated' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to update this User', error })
+  }
 })
 
 module.exports = router

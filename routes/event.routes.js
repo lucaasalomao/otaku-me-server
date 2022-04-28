@@ -27,27 +27,27 @@ router.get('/:eventId', async (req, res) => {
 })
 
 // Get All Events
-router.get('/allEvents', async (req, res) => {
+router.get('/search/all', async (req, res) => {
   try {
     const events = await Event.find()
     res.status(200).json(events)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get Events', error })
+    res.status(500).json({ message: 'Error trying to get all Events', error })
   }
 })
 
 // Get All Events containing string
-router.get('/:text', async (req, res) => {
+router.get('/search/:text', async (req, res) => {
   const { text } = req.params
   try {
     const events = await Event.find({ eventName: { $regex: text } })
     res.status(200).json(events)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get Events', error })
+    res.status(500).json({ message: 'Error trying to get specific Events', error })
   }
 })
 
-// Create New Event in Agenda
+// CREATE New Event in Agenda
 router.post('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
   const { userId } = req.user
@@ -62,9 +62,8 @@ router.post('/:agendaId', async (req, res) => {
 })
 
 // Transfer/Copy Exisiting Event to Agenda
-router.post('/:agendaId', async (req, res) => {
-  const { agendaId } = req.params
-  const { originalEventId } = req.body
+router.post('/:agendaId/:originalEventId', async (req, res) => {
+  const { agendaId, originalEventId } = req.params
   const { userId } = req.user
   try {
     if (!userId.agendas.includes(agendaId)) {
@@ -84,9 +83,8 @@ router.post('/:agendaId', async (req, res) => {
 })
 
 /* Delete a Event from Agenda */
-router.delete('/:agendaId', async (req, res) => {
-  const { agendaId } = req.params
-  const { eventId } = req.body
+router.delete('/:agendaId/:eventId', async (req, res) => {
+  const { agendaId, eventId } = req.params
   const { userId } = req.user
   try {
     const agenda = await Agenda.findById(agendaId)
@@ -103,6 +101,27 @@ router.delete('/:agendaId', async (req, res) => {
 
     res.status(200).json({ message: 'Event successfully deleted' })
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to delete Agenda', error })
+    res.status(500).json({ message: 'Error trying to delete Event', error })
   }
 })
+
+/* Edit Event */
+router.put('/:agendaId/:eventId', async (req, res) => {
+  const { agendaId, eventId } = req.params
+  const { userId } = req.user
+  try {
+    const agenda = await Event.findById(agendaId)
+
+    if (agenda.agendaCreator !== userId) {
+      return res.status(400).json("User can't edit other user's Agenda")
+    }
+
+    await Event.findByIdAndUpdate(eventId, req.body)
+
+    res.status(200).json({ message: 'Event successfully updated' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to update this Event', error })
+  }
+})
+
+module.exports = router

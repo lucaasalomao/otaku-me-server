@@ -18,10 +18,11 @@ app.use(cors())
 const authMiddleware = require('./middlewares/auth.middleware')
 
 /* importing routes */
-const authRoute = require('./routes/auth.routes')
-const agendaRoute = require('./routes/agenda.routes')
-const animeRoute = require('./routes/anime.routes')
 const commentRoute = require('./routes/comment.routes')
+const agendaRoute = require('./routes/agenda.routes')
+const eventRoute = require('./routes/event.routes')
+const userRoute = require('./routes/user.routes')
+const authRoute = require('./routes/auth.routes')
 
 /* public routes */
 app.use(authRoute)
@@ -30,8 +31,9 @@ app.use(authRoute)
 app.use(authMiddleware)
 
 /* private routes */
-app.use(commentRoute)
-app.use(agendaRoute)
-app.use(animeRoute)
+app.use('/comment', commentRoute)
+app.use('/agenda', agendaRoute)
+app.use('/event', eventRoute)
+app.use('/user', userRoute)
 
 module.exports = app

@@ -67,4 +67,17 @@ router.post('/signin', async (req, res) => {
   }
 })
 
+/* router.get('/verify-token', (req, res) => {
+  console.log(token)
+  const { token } = req.body
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT)
+    res.status(200).json({ validation: decodedToken.hasOwnProperty('id') })
+  } catch (error) {
+    res.status(401).json({ message: 'Error trying to verify token' })
+  }
+
+}) */
+
 module.exports = router
