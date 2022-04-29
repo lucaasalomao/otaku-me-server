@@ -55,29 +55,30 @@ router.post('/signin', async (req, res) => {
     }
 
     const payload = {
-      id: user._id,
-      username: user.username
+      useremail: user.email
     }
 
     const token = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '4h' })
 
-    res.status(200).json({ user: payload, token })
+    res.status(200).json({ userInfo: payload, token })
   } catch (error) {
     res.status(500).json({ message: 'Error trying to login', error: error.message })
   }
 })
 
-/* router.get('/verify-token', (req, res) => {
-  console.log(token)
-  const { token } = req.body
-
+router.get('/verify-token', (req, res) => {
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET_JWT)
-    res.status(200).json({ validation: decodedToken.hasOwnProperty('id') })
+    const { useremail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+    console.log(useremail)
+    if (!useremail) {
+      return res.status(401).json({ message: 'Token is not valid' })
+    }
+    res.status(200).json({ message: 'Token is valid' })
   } catch (error) {
-    res.status(401).json({ message: 'Error trying to verify token' })
+    res.status(401).json({ message: error.message })
   }
-
-}) */
+})
 
 module.exports = router

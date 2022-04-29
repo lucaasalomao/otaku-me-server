@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
 
   try {
     const decodedToken = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
-    req.user = { ...decodedToken }
+    req.userInfo = { ...decodedToken }
     next()
   } catch (error) {
     res.status(401).json({ message: 'Unauthorized' })
