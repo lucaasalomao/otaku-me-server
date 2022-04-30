@@ -24,11 +24,9 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "react-scripts build",
     "test": "jest",
     "test:wacth": "jest --watchAll",
     "test:staged": "jest --findRelatedTests",
-    "eject": "react-scripts eject",
     "prepare": "husky install"
   },
   "standard": {
