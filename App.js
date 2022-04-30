@@ -25,7 +25,7 @@ const userRoute = require('./routes/user.routes')
 const authRoute = require('./routes/auth.routes')
 
 /* public routes */
-app.use(authRoute)
+app.use('/', authRoute)
 
 /* authentication middleware */
 app.use(authMiddleware)
