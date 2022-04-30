@@ -1,4 +1,4 @@
-const server = require('./app')
+const server = require('./app.js')
 
 /* running server */
 server.listen(process.env.PORT, () => {
