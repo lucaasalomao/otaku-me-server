@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 /* importing models */
 const Comment = require('../models/agenda.model')
 const Agenda = require('../models/agenda.model')
@@ -13,13 +15,13 @@ router.get('/:eventId', async (req, res) => {
   const { eventId } = req.params
   try {
     const event = await Event.findById(eventId)
-      .populate({
+    /*       .populate({
         path: 'eventComments',
         populate: {
           path: 'commentCreator',
           select: 'username userImage -passwordHash'
         }
-      })
+      }) */
     res.status(200).json(event)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get Event', error })
@@ -50,9 +52,15 @@ router.get('/search/:text', async (req, res) => {
 // CREATE New Event in Agenda
 router.post('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
-  const { userId } = req.user
+  const { userID } = req.userInfo
   try {
-    const eventFromDB = await Event.create({ ...req.body, eventCreator: userId })
+    const agenda = await Agenda.findById(agendaId)
+
+    if (agenda.agendaCreator !== mongoose.Types.ObjectId(userID)) {
+      return res.status(400).json("User can't create Event from other user's Agenda")
+    }
+
+    const eventFromDB = await Event.create({ ...req.body, eventCreator: userID })
     await Agenda.findByIdAndUpdate(agendaId, { $push: { agendaEvents: eventFromDB._id } })
 
     res.status(201).json(eventFromDB)
@@ -85,11 +93,11 @@ router.post('/:agendaId/:originalEventId', async (req, res) => {
 /* Delete a Event from Agenda */
 router.delete('/:agendaId/:eventId', async (req, res) => {
   const { agendaId, eventId } = req.params
-  const { userId } = req.user
+  const { userID } = req.userInfo
   try {
     const agenda = await Agenda.findById(agendaId)
 
-    if (agenda.agendaCreator !== userId) {
+    if (agenda.agendaCreator !== mongoose.Types.ObjectId(userID)) {
       return res.status(400).json("User can't delete Event from other user's Agenda")
     }
 
@@ -97,7 +105,7 @@ router.delete('/:agendaId/:eventId', async (req, res) => {
     await Comment.deleteMany({ _id: { $in: event.eventComments } })
     await Event.findByIdAndDelete(eventId)
     await Agenda.findByIdAndUpdate(agendaId, { $pull: { agendaEvents: eventId } })
-    await User.findByIdAndUpdate(userId, { $pull: { event: eventId } })
+    await User.findByIdAndUpdate(userID, { $pull: { event: eventId } })
 
     res.status(200).json({ message: 'Event successfully deleted' })
   } catch (error) {

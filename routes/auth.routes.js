@@ -55,7 +55,8 @@ router.post('/signin', async (req, res) => {
     }
 
     const payload = {
-      useremail: user.email
+      userEmail: user.email,
+      userID: user._id
     }
 
     const token = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '4h' })
@@ -71,7 +72,6 @@ router.get('/verify-token', (req, res) => {
   const tokenWithoutBearer = token.split(' ')[1]
   try {
     const { useremail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
-    console.log(useremail)
     if (!useremail) {
       return res.status(401).json({ message: 'Token is not valid' })
     }

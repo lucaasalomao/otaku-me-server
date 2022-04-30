@@ -10,17 +10,17 @@ const router = Router()
 
 // Get User
 router.get('/:userId', async (req, res) => {
-  const { userId } = req.params
+  const { userID } = req.userInfo
   try {
-    const user = await User.findById(userId)
-      .populate('agendaEvents')
+    const user = await User.findById(userID)
+    /*       .populate('agendaEvents')
       .populate({
         path: 'agendaComments',
         populate: {
           path: 'commentCreator',
           select: 'username userImage -passwordHash'
         }
-      })
+      }) */
     res.status(200).json(user)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get User', error })
@@ -41,7 +41,7 @@ router.get('/search/all', async (req, res) => {
 router.get('/search/:text', async (req, res) => {
   const { text } = req.params
   try {
-    const users = await User.find({ username: { $regex: text } })
+    const users = await User.find({ email: { $regex: text } })
     res.status(200).json(users)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get specific Users', error })
@@ -49,9 +49,8 @@ router.get('/search/:text', async (req, res) => {
 })
 
 /* Edit User */
-router.put('/:userId', async (req, res) => {
-  const { userId } = req.params
-  const { _id } = req.user
+/* router.put('/', async (req, res) => {
+  const { userID } = req.userInfo
   try {
     if (userId !== _id) {
       return res.status(400).json("User can't edit other User")
@@ -63,6 +62,6 @@ router.put('/:userId', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error trying to update this User', error })
   }
-})
+}) */
 
 module.exports = router

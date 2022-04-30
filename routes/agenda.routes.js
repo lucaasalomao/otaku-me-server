@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 /* importing models */
 const Comment = require('../models/agenda.model')
 const Agenda = require('../models/agenda.model')
@@ -13,14 +15,14 @@ router.get('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
   try {
     const agenda = await Agenda.findById(agendaId)
-      .populate('agendaEvents')
+    /*       .populate('agendaEvents')
       .populate({
         path: 'agendaComments',
         populate: {
           path: 'commentCreator',
           select: 'username userImage -passwordHash'
         }
-      })
+      }) */
     res.status(200).json(agenda)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get Agenda', error })
@@ -50,9 +52,9 @@ router.get('/search/:text', async (req, res) => {
 
 // CREATE New  Agenda
 router.post('/', async (req, res) => {
-  const { userId } = req.user
+  const { userID } = req.userInfo
   try {
-    const agendaFromDB = await Agenda.create({ ...req.body, agendaCreator: userId })
+    const agendaFromDB = await Agenda.create({ ...req.body, agendaCreator: userID })
     res.status(201).json(agendaFromDB)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to create Agenda', error })
@@ -62,18 +64,18 @@ router.post('/', async (req, res) => {
 /* Delete Agenda and everything inside */
 router.delete('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
-  const { userId } = req.user
+  const { userID } = req.userInfo
   try {
     const agenda = await Agenda.findById(agendaId)
 
-    if (agenda.agendaCreator !== userId) {
+    if (agenda.agendaCreator !== mongoose.Types.ObjectId(userID)) {
       return res.status(400).json("User can't delete other user's Agenda")
     }
 
     await Comment.deleteMany({ _id: { $in: agenda.agendaComments } })
     await Event.deleteMany({ _id: { $in: agenda.agendaEvents } })
-    await User.findByIdAndUpdate(userId, { $pull: { agendas: agendaId } })
-    await User.findByIdAndUpdate(userId, { $pull: { events: { $in: agenda.agendaEvents } } })
+    await User.findByIdAndUpdate(userID, { $pull: { agendas: agendaId } })
+    await User.findByIdAndUpdate(userID, { $pull: { events: { $in: agenda.agendaEvents } } })
     await Agenda.findByIdAndDelete(agendaId)
 
     res.status(200).json({ message: 'Agenda successfully deleted' })
@@ -85,11 +87,11 @@ router.delete('/:agendaId', async (req, res) => {
 /* Edit Agenda */
 router.put('/:agendaId', async (req, res) => {
   const { agendaId } = req.params
-  const { userId } = req.user
+  const { userID } = req.userInfo
   try {
     const agenda = await Agenda.findById(agendaId)
 
-    if (agenda.agendaCreator !== userId) {
+    if (agenda.agendaCreator !== mongoose.Types.ObjectId(userID)) {
       return res.status(400).json("User can't edit other user's Agenda")
     }
 

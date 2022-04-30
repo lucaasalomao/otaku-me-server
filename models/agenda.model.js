@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const agendaSchema = new Schema(
   {
-    agendaCreator: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    agendaCreator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     agendaName: { type: String, required: true },
     agendaDescription: { type: String },
     agendaImage: { type: String },
