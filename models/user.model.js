@@ -7,9 +7,10 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
     image: { type: String },
-    agendas: [{ type: Schema.Types.ObjectId, ref: 'Agenda' }],
-    events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
-    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    lists: [{ type: Schema.Types.ObjectId, ref: 'Lists' }],
+    items: [{ type: Schema.Types.ObjectId, ref: 'Items' }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   },
   {
     timestamps: true

@@ -1,7 +1,7 @@
 /* importing models */
-/* const Comment = require('../models/agenda.model')
-const Agenda = require('../models/agenda.model')
-const Event = require('../models/event.model') */
+/* const Comment = require('../models/comment.model')
+const List = require('../models/list.model')
+const Item = require('../models/item.model') */
 const User = require('../models/user.model')
 
 /* initialization of express router */
@@ -9,13 +9,13 @@ const { Router } = require('express')
 const router = Router()
 
 // Get User
-router.get('/:userId', async (req, res) => {
-  const { userID } = req.userInfo
+router.get('/:userID', async (req, res) => {
+  const { userID } = req.paramns
   try {
-    const user = await User.findById(userID)
-    /*       .populate('agendaEvents')
+    const user = await User.findById(userID).select('-email -passwordHash')
+    /*       .populate('listItems')
       .populate({
-        path: 'agendaComments',
+        path: 'listComments',
         populate: {
           path: 'commentCreator',
           select: 'username userImage -passwordHash'

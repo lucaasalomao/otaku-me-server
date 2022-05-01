@@ -1,22 +1,22 @@
 /* importing models */
-const Comment = require('../models/agenda.model')
-const Agenda = require('../models/agenda.model')
-const Event = require('../models/event.model')
+const Comment = require('../models/comment.model')
+const List = require('../models/list.model')
+const Item = require('../models/item.model')
 
 /* initialization of express router */
 const { Router } = require('express')
 const router = Router()
 
-/* CREATE comment in Agenda */
-router.post('/agenda/:agendaId', async (req, res) => {
-  const { agendaId } = req.params
+/* CREATE comment in List */
+router.post('/list/:listId', async (req, res) => {
+  const { listId } = req.params
   const { id } = req.user
   try {
-    const newComment = { ...req.body, agendaReference: agendaId, commentCreator: id }
+    const newComment = { ...req.body, listReference: listId, commentCreator: id }
     const commentFromDB = await Comment.create(newComment)
 
-    await Agenda.findByIdAndUpdate(agendaId, {
-      $push: { agendaComments: commentFromDB._id }
+    await List.findByIdAndUpdate(listId, {
+      $push: { listComments: commentFromDB._id }
     })
 
     res.status(201).json(commentFromDB)
@@ -25,8 +25,8 @@ router.post('/agenda/:agendaId', async (req, res) => {
   }
 })
 
-/* Delete a comment from Agenda */
-router.delete('/agenda/:commentId', async (req, res) => {
+/* Delete a comment from List */
+router.delete('/list/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
   try {
@@ -38,7 +38,7 @@ router.delete('/agenda/:commentId', async (req, res) => {
 
     await Comment.findByIdAndDelete(commentId)
 
-    await Agenda.findByIdAndUpdate(comment.agendaReference, { $pull: { agendaComments: commentId } })
+    await List.findByIdAndUpdate(comment.listReference, { $pull: { listComments: commentId } })
 
     res.status(200).json({ message: 'Comment deleted' })
   } catch (error) {
@@ -46,16 +46,16 @@ router.delete('/agenda/:commentId', async (req, res) => {
   }
 })
 
-/* CREATE comment in Event */
-router.post('/event/:eventId', async (req, res) => {
-  const { eventId } = req.params
+/* CREATE comment in Item */
+router.post('/item/:itemID', async (req, res) => {
+  const { itemID } = req.params
   const { id } = req.user
   try {
-    const newComment = { ...req.body, eventReference: eventId, commentCreator: id }
+    const newComment = { ...req.body, itemReference: itemID, commentCreator: id }
     const commentFromDB = await Comment.create(newComment)
 
-    await Event.findByIdAndUpdate(eventId, {
-      $push: { eventComments: commentFromDB._id }
+    await Item.findByIdAndUpdate(itemID, {
+      $push: { itemComments: commentFromDB._id }
     })
 
     res.status(201).json(commentFromDB)
@@ -64,8 +64,8 @@ router.post('/event/:eventId', async (req, res) => {
   }
 })
 
-/* Delete a comment from Event */
-router.delete('/event/:commentId', async (req, res) => {
+/* Delete a comment from Item */
+router.delete('/item/:commentId', async (req, res) => {
   const { commentId } = req.params
   const { id } = req.user
   try {
@@ -77,7 +77,7 @@ router.delete('/event/:commentId', async (req, res) => {
 
     await Comment.findByIdAndDelete(commentId)
 
-    await Event.findByIdAndUpdate(comment.eventReference, { $pull: { eventComments: commentId } })
+    await Item.findByIdAndUpdate(comment.itemReference, { $pull: { itemComments: commentId } })
 
     res.status(200).json({ message: 'Comment successfully deleted' })
   } catch (error) {
