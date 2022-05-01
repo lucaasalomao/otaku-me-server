@@ -1,3 +1,6 @@
+/* importing packages */
+const jwt = require('jsonwebtoken')
+
 const mongoose = require('mongoose')
 
 /* importing models */
@@ -52,20 +55,26 @@ router.get('/search/:text', async (req, res) => {
 // CREATE New Item in List
 router.post('/:listId', async (req, res) => {
   const { listId } = req.params
-  const { userID } = req.userInfo
+
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { userEmail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
   try {
     const list = await List.findById(listId)
+    const user = await User.findOne({ email: userEmail })
 
-    if (list.listCreator !== userID) {
+    if (!list.listCreator.equals(user._id)) {
       return res.status(400).json("User can't create Item from other user's List")
     }
 
-    const itemFromDB = await Item.create({ ...req.body, itemCreator: userID })
+    const itemFromDB = await Item.create({ ...req.body, itemCreator: user._id })
     await List.findByIdAndUpdate(listId, { $push: { listItems: itemFromDB._id } })
+    await User.findByIdAndUpdate(user._id, { $push: { listItems: itemFromDB._id } })
 
     res.status(201).json(itemFromDB)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to create Item', error })
+    res.status(500).json({ message: 'Error trying to create Item', error: error.message })
   }
 })
 
@@ -114,13 +123,13 @@ router.delete('/:listId/:itemId', async (req, res) => {
 })
 
 /* Edit Item */
-router.put('/:listId/:itemId', async (req, res) => {
-  const { listId, itemId } = req.params
+router.put('/:itemId', async (req, res) => {
+  const { itemId } = req.params
   const { userId } = req.user
   try {
-    const list = await Item.findById(listId)
+    const item = await Item.findById(itemId)
 
-    if (list.listCreator !== userId) {
+    if (item.itemCreator !== userId) {
       return res.status(400).json("User can't edit other user's List")
     }
 

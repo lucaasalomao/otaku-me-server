@@ -33,7 +33,7 @@ app.use(authMiddleware)
 /* private routes */
 app.use('/comment', commentRoute)
 app.use('/list', listRoute)
-app.use('/item  ', itemRoute)
+app.use('/item', itemRoute)
 app.use('/user', userRoute)
 
 module.exports = app

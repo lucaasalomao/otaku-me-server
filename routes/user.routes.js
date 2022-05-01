@@ -1,14 +1,36 @@
+/* importing packages */
+const jwt = require('jsonwebtoken')
+
 /* importing models */
-/* const Comment = require('../models/comment.model')
-const List = require('../models/list.model')
-const Item = require('../models/item.model') */
 const User = require('../models/user.model')
 
 /* initialization of express router */
 const { Router } = require('express')
 const router = Router()
 
-// Get User
+// Get Primary User
+router.get('/', async (req, res) => {
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { userEmail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
+  try {
+    const user = await User.findOne({ userEmail }).select('-email -passwordHash')
+    /*       .populate('listItems')
+      .populate({
+        path: 'listComments',
+        populate: {
+          path: 'commentCreator',
+          select: 'username userImage -passwordHash'
+        }
+      }) */
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get User', error })
+  }
+})
+
+// Get Secondary User
 router.get('/:userID', async (req, res) => {
   const { userID } = req.paramns
   try {
