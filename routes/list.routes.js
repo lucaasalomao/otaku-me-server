@@ -1,3 +1,6 @@
+/* importing packages */
+const jwt = require('jsonwebtoken')
+
 const mongoose = require('mongoose')
 
 /* importing models */
@@ -33,6 +36,11 @@ router.get('/:listId', async (req, res) => {
 router.get('/search/all', async (req, res) => {
   try {
     const lists = await List.find()
+      .populate({
+        path: 'listCreator',
+        model: 'User',
+        select: '-passwordHash'
+      })
     res.status(200).json(lists)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get all Lists', error })
@@ -44,6 +52,11 @@ router.get('/search/:text', async (req, res) => {
   const { text } = req.params
   try {
     const lists = await List.find({ listName: { $regex: text } })
+      .populate({
+        path: 'listCreator',
+        model: 'User',
+        select: '-passwordHash'
+      })
     res.status(200).json(lists)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get specific Lists', error })
@@ -52,11 +65,15 @@ router.get('/search/:text', async (req, res) => {
 
 // CREATE New  List
 router.post('/', async (req, res) => {
-  const { userID } = req.userInfo
-  console.log(userID)
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
   try {
-    const list = await List.create({ ...req.body, listCreator: userID })
-    res.status(201).json(list)
+    const user = await User.findOne({ username })
+    const listFromDB = await List.create({ ...req.body, listCreator: user._id })
+    await User.findByIdAndUpdate(user._id, { $push: { lists: listFromDB._id } })
+    res.status(201).json(listFromDB)
   } catch (error) {
     res.status(500).json({ message: 'Error trying to create List', error: error.message })
   }

@@ -3,49 +3,42 @@ const jwt = require('jsonwebtoken')
 
 /* importing models */
 const User = require('../models/user.model')
+const Comment = require('../models/comment.model')
 
 /* initialization of express router */
 const { Router } = require('express')
 const router = Router()
 
-// Get Primary User
-router.get('/', async (req, res) => {
-  const token = req.get('Authorization')
-  const tokenWithoutBearer = token.split(' ')[1]
-  const { userEmail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+// Get User profile info
+router.get('/:username', async (req, res) => {
+  /* getting requested user profile */
+  const { username } = req.params
 
   try {
-    const user = await User.findOne({ userEmail }).select('-email -passwordHash')
-    /*       .populate('listItems')
+    const requestedUserProfile = await User.findOne({ username })
+      .select('-passwordHash')
       .populate({
-        path: 'listComments',
+        path: 'lists',
         populate: {
-          path: 'commentCreator',
-          select: 'username userImage -passwordHash'
+          path: 'listItems',
+          model: 'Item'
         }
-      }) */
-    res.status(200).json(user)
-  } catch (error) {
-    res.status(500).json({ message: 'Error trying to get User', error })
-  }
-})
-
-// Get Secondary User
-router.get('/:userID', async (req, res) => {
-  const { userID } = req.paramns
-  try {
-    const user = await User.findById(userID).select('-email -passwordHash')
-    /*       .populate('listItems')
+      })
       .populate({
-        path: 'listComments',
+        path: 'lists',
         populate: {
-          path: 'commentCreator',
-          select: 'username userImage -passwordHash'
+          path: 'listComments',
+          model: 'Comment'
         }
-      }) */
-    res.status(200).json(user)
+      })
+      .populate({
+        path: 'following',
+        model: 'User',
+        select: '-passwordHash'
+      })
+    res.status(200).json(requestedUserProfile)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get User', error })
+    res.status(500).json({ message: 'Error trying to get User', error: error.message })
   }
 })
 
@@ -55,7 +48,34 @@ router.get('/search/all', async (req, res) => {
     const users = await User.find()
     res.status(200).json(users)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get all Users', error })
+    res.status(500).json({ message: 'Error trying to get all Users', error: error.message })
+  }
+})
+
+// Get User followers info
+router.get('/following/activity', async (req, res) => {
+  /* getting requested user profile */
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
+  try {
+    const { following } = await User.findOne({ username }).select('following')
+
+    const comments = await Comment.find({ commentCreator: { $in: following } })
+      .select('commentCreator commentText')
+      .populate({
+        path: 'commentCreator',
+        model: 'User',
+        select: 'username -_id'
+      })
+
+    const followers = await User.find({ _id: { $in: following } })
+      .select('username')
+
+    res.status(200).json({ comments, followers })
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get User', error: error.message })
   }
 })
 
@@ -63,27 +83,36 @@ router.get('/search/all', async (req, res) => {
 router.get('/search/:text', async (req, res) => {
   const { text } = req.params
   try {
-    const users = await User.find({ email: { $regex: text } })
+    const users = await User.find({ username: { $regex: text } })
     res.status(200).json(users)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get specific Users', error })
+    res.status(500).json({ message: 'Error trying to get specific Users', error: error.message })
   }
 })
 
-/* Edit User */
-/* router.put('/', async (req, res) => {
-  const { userID } = req.userInfo
+// Follow User
+router.post('/follow/:followUsername', async (req, res) => {
+  const { followUsername } = req.params
+
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
   try {
-    if (userId !== _id) {
-      return res.status(400).json("User can't edit other User")
+    const loggedUser = await User.findOne({ username })
+    const userToFollow = await User.findOne({ username: followUsername })
+
+    if (loggedUser.following.includes(userToFollow._id)) {
+      throw new Error('Username is already being followed')
     }
 
-    await User.findByIdAndUpdate(userId, req.body)
+    await User.findByIdAndUpdate(loggedUser._id, { $push: { following: userToFollow._id } })
+    await User.findByIdAndUpdate(userToFollow._id, { $push: { followers: loggedUser._id } })
 
-    res.status(200).json({ message: 'User successfully updated' })
+    res.status(200).json({ message: `Succesfully followed ${followUsername}` })
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to update this User', error })
+    res.status(500).json({ message: 'Error trying to get specific Users', error: error.message })
   }
-}) */
+})
 
 module.exports = router

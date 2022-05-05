@@ -27,7 +27,7 @@ router.get('/:itemId', async (req, res) => {
       }) */
     res.status(200).json(item)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get Item', error })
+    res.status(500).json({ message: 'Error trying to get Item', error: error.message })
   }
 })
 
@@ -35,9 +35,14 @@ router.get('/:itemId', async (req, res) => {
 router.get('/search/all', async (req, res) => {
   try {
     const items = await Item.find()
+      .populate({
+        path: 'itemCreator',
+        model: 'User',
+        select: '-passwordHash'
+      })
     res.status(200).json(items)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get all Items', error })
+    res.status(500).json({ message: 'Error trying to get all Items', error: error.message })
   }
 })
 
@@ -46,9 +51,14 @@ router.get('/search/:text', async (req, res) => {
   const { text } = req.params
   try {
     const items = await Item.find({ itemName: { $regex: text } })
+      .populate({
+        path: 'itemCreator',
+        model: 'User',
+        select: '-passwordHash'
+      })
     res.status(200).json(items)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to get specific Items', error })
+    res.status(500).json({ message: 'Error trying to get specific Items', error: error.message })
   }
 })
 
@@ -58,19 +68,20 @@ router.post('/:listId', async (req, res) => {
 
   const token = req.get('Authorization')
   const tokenWithoutBearer = token.split(' ')[1]
-  const { userEmail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
 
   try {
     const list = await List.findById(listId)
-    const user = await User.findOne({ email: userEmail })
+    const user = await User.findOne({ username })
 
     if (!list.listCreator.equals(user._id)) {
       return res.status(400).json("User can't create Item from other user's List")
     }
 
-    const itemFromDB = await Item.create({ ...req.body, itemCreator: user._id })
+    const itemFromDB = await Item.create({ ...req.body, itemCreator: user._id, itemList: listId })
+
     await List.findByIdAndUpdate(listId, { $push: { listItems: itemFromDB._id } })
-    await User.findByIdAndUpdate(user._id, { $push: { listItems: itemFromDB._id } })
+    await User.findByIdAndUpdate(user._id, { $push: { items: itemFromDB._id } })
 
     res.status(201).json(itemFromDB)
   } catch (error) {
@@ -95,7 +106,7 @@ router.post('/:listId/:originalItemId', async (req, res) => {
 
     res.status(201).json(newItemFromDB)
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to copy Item', error })
+    res.status(500).json({ message: 'Error trying to copy Item', error: error.message })
   }
 })
 
@@ -118,7 +129,7 @@ router.delete('/:listId/:itemId', async (req, res) => {
 
     res.status(200).json({ message: 'Item successfully deleted' })
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to delete Item', error })
+    res.status(500).json({ message: 'Error trying to delete Item', error: error.message })
   }
 })
 
@@ -137,7 +148,7 @@ router.put('/:itemId', async (req, res) => {
 
     res.status(200).json({ message: 'Item successfully updated' })
   } catch (error) {
-    res.status(500).json({ message: 'Error trying to update this Item', error })
+    res.status(500).json({ message: 'Error trying to update this Item', error: error.message })
   }
 })
 

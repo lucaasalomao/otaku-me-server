@@ -10,61 +10,59 @@ const { Router } = require('express')
 const router = Router()
 
 router.post('/signup', async (req, res) => {
-  const { email, password } = req.body
+  const { username, password } = req.body
 
   try {
-    if (!email || !password) {
-      throw new Error('Missing email or password')
+    if (!username || !password) {
+      throw new Error('Missing username or password')
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ username })
     if (user) {
-      throw new Error('Email already exists')
+      throw new Error('Username already exists')
     }
 
     const salt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(password, salt)
-    const url = bcrypt.hashSync(email, salt)
 
     await User.create({
-      email,
-      passwordHash,
-      url
+      username,
+      passwordHash
     })
 
-    res.status(201).json({ message: `User created: ${email}` })
+    res.status(201).json({ message: `User created: ${username}` })
   } catch (error) {
     res.status(500).json({ message: 'Error creating user:', error: error.message })
   }
 })
 
 router.post('/signin', async (req, res) => {
-  const { email, password } = req.body
+  const { username, password } = req.body
 
   try {
-    if (!email || !password) {
-      throw new Error('Missing email or password')
+    if (!username || !password) {
+      throw new Error('Missing username or password')
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ username })
     if (!user) {
-      throw new Error('Email or password is incorrect')
+      throw new Error('Username or password is incorrect')
     }
 
     const validation = bcrypt.compareSync(password, user.passwordHash)
 
     if (!validation) {
-      throw new Error('Email or password is incorrect 2')
+      throw new Error('Username or password is incorrect 2')
     }
 
     const payload = {
-      userEmail: user.email,
+      username,
       userID: user._id
     }
 
     const token = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '4h' })
 
-    res.status(200).json({ token })
+    res.status(200).json({ token, username })
   } catch (error) {
     res.status(500).json({ message: 'Error trying to login', error: error.message })
   }
@@ -73,15 +71,11 @@ router.post('/signin', async (req, res) => {
 router.get('/verify-token', (req, res) => {
   const token = req.get('Authorization')
   const tokenWithoutBearer = token.split(' ')[1]
-  try {
-    const { userEmail } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
-    if (!userEmail) {
-      return res.status(401).json({ message: 'Token is not valid' })
-    }
-    res.status(200).json({ message: 'Token is valid' })
-  } catch (error) {
-    res.status(401).json({ message: error.message })
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+  if (!username) {
+    return res.status(401).json({ message: 'Token is not valid' })
   }
+  res.status(200).json({ message: 'Token is valid' })
 })
 
 module.exports = router

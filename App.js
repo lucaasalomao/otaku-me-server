@@ -5,7 +5,6 @@ require('dotenv').config()
 require('./configs/db.config')
 
 /* initialization of express application */
-
 const express = require('express')
 const cors = require('cors')
 

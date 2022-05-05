@@ -8,7 +8,8 @@ const itemSchema = new Schema(
     itemDate: { type: String, required: true },
     itemName: { type: String, required: true },
     itemImage: { type: String },
-    itemComments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+    itemComments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    itemList: { type: Schema.Types.ObjectId, ref: 'List' }
   },
   {
     timestamps: true

@@ -17,7 +17,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "jest",
     "test:wacth": "jest --watchAll",
     "test:staged": "jest --findRelatedTests",

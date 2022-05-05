@@ -3,13 +3,11 @@ const { Schema } = mongoose
 
 const userSchema = new Schema(
   {
-    username: { type: String, unique: true },
-    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
-    url: { type: String, required: true, unique: true },
     image: { type: String },
-    lists: [{ type: Schema.Types.ObjectId, ref: 'Lists' }],
-    items: [{ type: Schema.Types.ObjectId, ref: 'Items' }],
+    lists: [{ type: Schema.Types.ObjectId, ref: 'List' }],
+    items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   },
