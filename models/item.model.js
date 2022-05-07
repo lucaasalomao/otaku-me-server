@@ -4,8 +4,8 @@ const { Schema } = mongoose
 const itemSchema = new Schema(
   {
     itemCreator: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-    itemType: { type: String, required: true },
-    itemDate: { type: String, required: true },
+    itemType: { type: String },
+    itemDate: { type: String },
     itemName: { type: String, required: true },
     itemImage: { type: String },
     itemComments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],

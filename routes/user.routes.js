@@ -28,7 +28,12 @@ router.get('/:username', async (req, res) => {
         path: 'lists',
         populate: {
           path: 'listComments',
-          model: 'Comment'
+          model: 'Comment',
+          populate: {
+            path: 'commentCreator',
+            model: 'User',
+            select: 'username'
+          }
         }
       })
       .populate({
@@ -90,6 +95,20 @@ router.get('/search/:text', async (req, res) => {
   }
 })
 
+// Get Following users
+router.get('/following/check', async (req, res) => {
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
+  try {
+    const { following } = await User.findOne({ username }).select('following -_id')
+    res.status(200).json(following)
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get User followers', error: error.message })
+  }
+})
+
 // Follow User
 router.post('/follow/:followUsername', async (req, res) => {
   const { followUsername } = req.params
@@ -110,6 +129,27 @@ router.post('/follow/:followUsername', async (req, res) => {
     await User.findByIdAndUpdate(userToFollow._id, { $push: { followers: loggedUser._id } })
 
     res.status(200).json({ message: `Succesfully followed ${followUsername}` })
+  } catch (error) {
+    res.status(500).json({ message: 'Error trying to get specific Users', error: error.message })
+  }
+})
+
+// Follow User
+router.post('/unfollow/:unfollowUsername', async (req, res) => {
+  const { unfollowUsername } = req.params
+
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
+  try {
+    const loggedUser = await User.findOne({ username })
+    const userToUnfollow = await User.findOne({ username: unfollowUsername })
+
+    await User.findByIdAndUpdate(loggedUser._id, { $pull: { following: userToUnfollow._id } })
+    await User.findByIdAndUpdate(userToUnfollow._id, { $pull: { followers: loggedUser._id } })
+
+    res.status(200).json({ message: `Succesfully unfollowed ${unfollowUsername}` })
   } catch (error) {
     res.status(500).json({ message: 'Error trying to get specific Users', error: error.message })
   }

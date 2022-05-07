@@ -35,19 +35,24 @@ router.post('/:listID/:itemID', async (req, res) => {
 })
 
 /* Delete a comment from List and Item simutaneously */
-router.delete('/:listID/:commentId', async (req, res) => {
+router.delete('/:commentId', async (req, res) => {
   const { commentId } = req.params
-  const { id } = req.user
+
+  const token = req.get('Authorization')
+  const tokenWithoutBearer = token.split(' ')[1]
+  const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
+
   try {
+    const user = await User.findOne({ username })
     const comment = await Comment.findById(commentId)
 
-    if (comment.commentCreator !== id) {
+    if (!comment.commentCreator.equals(user._id)) {
       return res.status(400).json("User can't delete other user's comment")
     }
 
     await Comment.findByIdAndDelete(commentId)
-
-    await Item.findByIdAndUpdate(comment.itemReference, { $pull: { itemComments: commentId } })
+    await Item.findByIdAndUpdate(comment.commentOnItem, { $pull: { itemComments: commentId } })
+    await List.findByIdAndUpdate(comment.commentOnList, { $pull: { listComments: commentId } })
 
     res.status(200).json({ message: 'Comment successfully deleted' })
   } catch (error) {

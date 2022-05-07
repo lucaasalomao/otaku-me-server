@@ -69,6 +69,7 @@ router.post('/', async (req, res) => {
   const tokenWithoutBearer = token.split(' ')[1]
   const { username } = jwt.verify(tokenWithoutBearer, process.env.SECRET_JWT)
 
+  console.log(req.body)
   try {
     const user = await User.findOne({ username })
     const listFromDB = await List.create({ ...req.body, listCreator: user._id })
